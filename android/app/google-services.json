@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "571300791191",
+    "project_id": "urbangreen-3f832",
+    "storage_bucket": "urbangreen-3f832.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571300791191:android:1176c6733d3498d8dffad2",
+        "android_client_info": {
+          "package_name": "com.example.urbangreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSvvkRE4GDoicFQD-wOB6EyJvY1jZXVzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
