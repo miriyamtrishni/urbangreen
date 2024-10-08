@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'custom_navbar.dart';
 import 'login_screen.dart';
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -17,8 +20,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reEnterPasswordController = TextEditingController();
-  
+
   User? _currentUser;
+  String? _profileImageUrl; // For storing the user's profile image URL
 
   @override
   void initState() {
@@ -35,7 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _nameController.text = userDoc.get('name');
         _usernameController.text = userDoc.get('username');
         _emailController.text = userDoc.get('email');
+        _profileImageUrl = userDoc.get('profileImage'); // Fetch profile image URL if exists
       }
+      setState(() {});
     }
   }
 
@@ -72,22 +78,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Upload profile image to Firebase Storage
+  Future<void> _uploadImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      Reference storageReference = FirebaseStorage.instance.ref().child('profile_pics/${_currentUser!.uid}');
+      UploadTask uploadTask = storageReference.putFile(File(image.path));
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      // Get the download URL for the image
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+      // Update the user's profile image URL in Firestore
+      await FirebaseFirestore.instance.collection('users').doc(_currentUser!.uid).update({
+        'profileImage': downloadURL,
+      });
+
+      setState(() {
+        _profileImageUrl = downloadURL;
+      });
+    }
+  }
+
   // Log out the user
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        elevation: 0, // No shadow under the AppBar
-        automaticallyImplyLeading: false, // Removes the default back arrow
-        toolbarHeight: 100, // Sets height of the AppBar
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -114,27 +142,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Green background for the profile header
             Container(
               height: 150,
               color: Colors.green,
               child: Center(
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundImage: NetworkImage(
-                    'https://example.com/path_to_your_image.jpg', // Replace with the user image URL
-                  ),
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _profileImageUrl != null
+                          ? NetworkImage(_profileImageUrl!)
+                          : AssetImage('assets/default_profile.png'), // Default image if no profile image
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt, color: Colors.white),
+                        onPressed: _uploadImage,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             SizedBox(height: 10),
-            // User Name under the avatar
             Text(
-              _nameController.text, // User's name fetched from Firebase
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              _nameController.text,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Padding(
@@ -167,8 +202,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: CustomNavBar(
-        selectedIndex: _selectedIndex, onItemTapped: (int value) {  },
-        
+        selectedIndex: _selectedIndex,
+        onItemTapped: (int value) {
+          setState(() {
+            _selectedIndex = value;
+          });
+        },
       ),
     );
   }
