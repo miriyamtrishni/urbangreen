@@ -6,7 +6,6 @@ import 'package:urbangreen/create_post_screen.dart';
 import 'login_screen.dart';
 import 'user_home_screen.dart';
 import 'profile_screen.dart';  // Import Profile screen
-import 'community_screen.dart'; // Assuming you have these screens
 import 'bus_screen.dart';
 import 'notification_screen.dart';
 
@@ -48,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/add_post': (context) => CreatePostScreen(),
       },
       home: initialScreen,  // Start with the initial screen
+      
     );
   }
 }
