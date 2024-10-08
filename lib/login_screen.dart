@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'admin_home_screen.dart';
 import 'user_home_screen.dart';
 
@@ -17,12 +18,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  // Save login state
+  Future<void> _saveLoginState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+  }
+
   Future<void> _login() async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      // Save login state
+      await _saveLoginState();
 
       // Fetch user role from Firestore
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -46,14 +56,12 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } else {
-        // If user document doesn't exist
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('User data not found.')),
         );
       }
     } catch (e) {
       print('Error: $e');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Error: $e')),
       );
@@ -70,6 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
           idToken: googleAuth.idToken,
         );
         UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // Save login state
+        await _saveLoginState();
 
         // Check if user data exists in Firestore
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -104,7 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       print('Error: $e');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Google Sign-In Error: $e')),
       );
@@ -114,7 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Using SingleChildScrollView to prevent overflow
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -12,7 +12,12 @@
           "package_name": "com.example.urbangreen"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "571300791191-lbd0r0dsk082vdqosiriaf1rir1ettvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDSvvkRE4GDoicFQD-wOB6EyJvY1jZXVzw"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571300791191-lbd0r0dsk082vdqosiriaf1rir1ettvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "571300791191-fta83ldau2q5eg7git20ti0pgjafljsd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.urbangreen"
+              }
+            }
+          ]
         }
       }
     }
