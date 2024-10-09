@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urbangreen/community_feed_screen.dart';
 import 'package:urbangreen/create_post_screen.dart';
+import 'package:urbangreen/user_notifications_screen.dart';
 import 'login_screen.dart';
 import 'user_home_screen.dart';
 import 'profile_screen.dart';  // Import Profile screen
 import 'bus_screen.dart';
-import 'notification_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final Widget initialScreen;
 
-  MyApp({required this.initialScreen});
+  const MyApp({super.key, required this.initialScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         
         '/community': (context) => CommunityFeedScreen(),
         '/bus': (context) => BusScreen(),
-        '/notification': (context) => NotificationScreen(),
+        '/notification': (context) => UserNotificationScreen(),
         '/profile': (context) => ProfileScreen(),
         '/login': (context) => LoginScreen(),
         '/add_post': (context) => CreatePostScreen(),

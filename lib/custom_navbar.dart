@@ -5,10 +5,10 @@ class CustomNavBar extends StatelessWidget {
   final ValueChanged<int> onItemTapped;
 
   const CustomNavBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onItemTapped,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +16,38 @@ class CustomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: selectedIndex == 0 ? Colors.green : Colors.black),
+          icon: Icon(
+            Icons.home,
+            color: selectedIndex == 0 ? Colors.green : Colors.black, // Green when selected
+          ),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.people, color: selectedIndex == 1 ? Colors.green : Colors.black),
+          icon: Icon(
+            Icons.people,
+            color: selectedIndex == 1 ? Colors.green : Colors.black, // Green when selected
+          ),
           label: 'Community',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.directions_bus, color: selectedIndex == 2 ? Colors.green : Colors.black),
+          icon: Icon(
+            Icons.directions_bus,
+            color: selectedIndex == 2 ? Colors.green : Colors.black, // Green when selected
+          ),
           label: 'Bus',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications, color: selectedIndex == 3 ? Colors.green : Colors.black),
+          icon: Icon(
+            Icons.notifications,
+            color: selectedIndex == 3 ? Colors.green : Colors.black, // Green when selected
+          ),
           label: 'Notification',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person, color: selectedIndex == 4 ? Colors.green : Colors.black),
+          icon: Icon(
+            Icons.person,
+            color: selectedIndex == 4 ? Colors.green : Colors.black, // Green when selected
+          ),
           label: 'Profile',
         ),
       ],
@@ -40,7 +55,7 @@ class CustomNavBar extends StatelessWidget {
       selectedItemColor: Colors.green,
       unselectedItemColor: Colors.black,
       onTap: (index) {
-        onItemTapped(index);  // Call the method to update index
+        onItemTapped(index); // Call the method to update index
         _navigateToScreen(index, context); // Navigate to the correct screen
       },
     );

@@ -8,6 +8,8 @@ import 'custom_navbar.dart'; // Import the custom navigation bar
 import 'comments_screen.dart'; // Import the Comments screen
 
 class CommunityFeedScreen extends StatefulWidget {
+  const CommunityFeedScreen({super.key});
+
   @override
   _CommunityFeedScreenState createState() => _CommunityFeedScreenState();
 }
@@ -26,13 +28,13 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Community Feed'),
+        title: const Text('Community Feed'),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           return ListView.builder(
@@ -51,9 +53,9 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             context,
             MaterialPageRoute(builder: (context) => CreatePostScreen()),
           );
-        },
-        child: Icon(Icons.add), // Add icon for creating a new post
-        backgroundColor: Colors.green, // Floating button color
+        }, // Add icon for creating a new post
+        backgroundColor: Colors.green,
+        child: Icon(Icons.add), // Floating button color
       ),
       bottomNavigationBar: CustomNavBar(
         selectedIndex: _selectedIndex,
@@ -68,7 +70,7 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
     bool isLiked = likes.contains(currentUserId);  // Check if the current user has liked the post
 
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -91,11 +93,11 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                 }
               },
               itemBuilder: (context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'Edit',
                   child: Text('Edit'),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'Delete',
                   child: Text('Delete'),
                 ),
@@ -124,14 +126,14 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                 onPressed: () => _toggleLike(post.id, likes),
               ),
               Text('${likes.length} likes'), // Display the number of likes
-              Spacer(),
+              const Spacer(),
               IconButton(
-                icon: Icon(Icons.comment),
+                icon: const Icon(Icons.comment),
                 onPressed: () {
                   _showComments(post.id, post);  // Display comments section
                 },
               ),
-              Text('Comments'),
+              const Text('Comments'),
             ],
           ),
         ],
@@ -165,11 +167,9 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
       await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
 
       // Delete the image from Firebase Storage
-      if (imageUrl != null) {
-        FirebaseStorage.instance.refFromURL(imageUrl).delete();
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post deleted successfully')));
+      FirebaseStorage.instance.refFromURL(imageUrl).delete();
+    
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post deleted successfully')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete post: $e')));
     }

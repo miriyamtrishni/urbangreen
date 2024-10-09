@@ -6,7 +6,7 @@ class CommentsScreen extends StatefulWidget {
   final String postId;
   final DocumentSnapshot postData;  // Pass the post data to the comments screen
 
-  CommentsScreen({required this.postId, required this.postData});
+  const CommentsScreen({super.key, required this.postId, required this.postData});
 
   @override
   _CommentsScreenState createState() => _CommentsScreenState();
@@ -35,12 +35,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Comments')),
+      appBar: AppBar(title: const Text('Comments')),
       body: Column(
         children: [
           // Display the full post details at the top
           Card(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -69,7 +69,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
@@ -97,14 +97,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 Expanded(
                   child: TextField(
                     controller: _commentController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Add a comment...',
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: _postComment,
                 ),
               ],

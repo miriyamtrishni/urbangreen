@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreatePostScreen extends StatefulWidget {
+  const CreatePostScreen({super.key});
+
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
 }
@@ -27,7 +29,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   Future<void> _createPost() async {
     if (_imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please add a photo')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add a photo')));
       return;
     }
 
@@ -47,7 +49,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       });
 
       // Show success message and navigate back
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post created successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post created successfully')));
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error creating post: $e')));
@@ -65,39 +67,39 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Post'),
+        title: const Text('Create Post'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_imageFile != null)
               Image.file(_imageFile!, height: 250, width: double.infinity, fit: BoxFit.cover),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: _pickImage,
-              icon: Icon(Icons.photo),
-              label: Text('Pick Image'),
-              style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+              icon: const Icon(Icons.photo),
+              label: const Text('Pick Image'),
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _captionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Caption',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _locationController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Location',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: _category,
               items: ['General', 'Environment', 'Infrastructure']
@@ -111,16 +113,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   _category = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Category',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _createPost,
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
               child: Text('Post'),
-              style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
             ),
           ],
         ),

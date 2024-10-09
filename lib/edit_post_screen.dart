@@ -9,7 +9,7 @@ class EditPostScreen extends StatefulWidget {
   final String postId;
   final DocumentSnapshot postData;
 
-  EditPostScreen({required this.postId, required this.postData});
+  const EditPostScreen({super.key, required this.postId, required this.postData});
 
   @override
   _EditPostScreenState createState() => _EditPostScreenState();
@@ -17,8 +17,8 @@ class EditPostScreen extends StatefulWidget {
 
 class _EditPostScreenState extends State<EditPostScreen> {
   int _selectedIndex = 1; // Set Community as initially selected
-  TextEditingController _captionController = TextEditingController();
-  TextEditingController _locationController = TextEditingController();
+  final TextEditingController _captionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   String? _category;
   File? _imageFile;
   String? _imageUrl;
@@ -59,7 +59,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
         'imageUrl': _imageUrl,
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post updated successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post updated successfully')));
       Navigator.pop(context); // Go back to the feed after a successful update
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update post: $e')));
@@ -70,16 +70,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Post'),
+        title: const Text('Edit Post'),
         actions: [
           TextButton(
             onPressed: _updatePost,
-            child: Text('Save', style: TextStyle(color: const Color.fromARGB(255, 156, 32, 32))), // Save button in AppBar
+            child: const Text('Save', style: TextStyle(color: Color.fromARGB(255, 156, 32, 32))), // Save button in AppBar
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,30 +87,30 @@ class _EditPostScreenState extends State<EditPostScreen> {
               Image.file(_imageFile!, height: 250, width: double.infinity, fit: BoxFit.cover)
             else if (_imageUrl != null)
               Image.network(_imageUrl!, height: 250, width: double.infinity, fit: BoxFit.cover),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: _pickImage,
-              icon: Icon(Icons.photo),
-              label: Text('Change Photo'),
-              style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+              icon: const Icon(Icons.photo),
+              label: const Text('Change Photo'),
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _captionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Edit Caption',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _locationController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Edit Location',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: _category,
               items: ['General', 'Environment', 'Infrastructure']
@@ -124,7 +124,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   _category = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Edit Category',
                 border: OutlineInputBorder(),
               ),

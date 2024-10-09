@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'custom_navbar.dart';
 
 class CommunityScreen extends StatefulWidget {
+  const CommunityScreen({super.key});
+
   @override
   _CommunityScreenState createState() => _CommunityScreenState();
 }
@@ -19,7 +21,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: const Center(
         child: Text('Community Screen'),
       ),
       bottomNavigationBar: CustomNavBar(

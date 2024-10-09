@@ -8,6 +8,8 @@ import 'login_screen.dart';
 import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -67,14 +69,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await _currentUser!.updatePassword(_passwordController.text.trim());
           }
 
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile updated successfully')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated successfully')));
         }
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile update failed: $e')));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Passwords do not match')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
     }
   }
 
@@ -120,18 +122,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text(
+            const Text(
               'Edit profile',
               style: TextStyle(color: Colors.black, fontSize: 18),
             ),
             TextButton(
               onPressed: _updateProfile,
-              child: Text(
+              child: const Text(
                 'Save',
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
@@ -152,13 +154,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       radius: 60,
                       backgroundImage: _profileImageUrl != null
                           ? NetworkImage(_profileImageUrl!)
-                          : AssetImage('assets/default_profile.png'), // Default image if no profile image
+                          : const AssetImage('assets/default_profile.png'), // Default image if no profile image
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: IconButton(
-                        icon: Icon(Icons.camera_alt, color: Colors.white),
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
                         onPressed: _uploadImage,
                       ),
                     ),
@@ -166,35 +168,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               _nameController.text,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   _buildTextField(_nameController, 'Enter your name'),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildTextField(_usernameController, 'Enter username'),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildTextField(_emailController, 'Enter your email'),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildPasswordField(_passwordController, 'Create password'),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildPasswordField(_reEnterPasswordController, 'Re-enter password'),
                 ],
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton.icon(
               onPressed: _logout,
-              icon: Icon(Icons.logout),
-              label: Text('Logout'),
+              icon: const Icon(Icons.logout),
+              label: const Text('Logout'),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
                 backgroundColor: Colors.black,
               ),
             ),
@@ -217,11 +219,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.green),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.green),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green, width: 2.0),
         ),
       ),
@@ -234,14 +236,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       obscureText: true,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.green),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.green),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green, width: 2.0),
         ),
-        suffixIcon: Icon(Icons.visibility_off, color: Colors.green),
+        suffixIcon: const Icon(Icons.visibility_off, color: Colors.green),
       ),
     );
   }

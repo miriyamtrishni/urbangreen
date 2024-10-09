@@ -7,6 +7,8 @@ import 'admin_home_screen.dart';
 import 'user_home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -48,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         // If user document doesn't exist
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User data not found.')),
+          const SnackBar(content: Text('User data not found.')),
         );
       }
     } catch (e) {
@@ -121,24 +123,24 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 60),
-              Text(
+              const SizedBox(height: 60),
+              const Text(
                 'Welcome back,',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Text('Login to your account'),
-              SizedBox(height: 20),
+              const Text('Login to your account'),
+              const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter email or username',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.visibility_off),
@@ -148,38 +150,38 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 children: [
                   Checkbox(value: false, onChanged: (bool? value) {}),
-                  Text('Remember me'),
-                  Spacer(),
+                  const Text('Remember me'),
+                  const Spacer(),
                   TextButton(
                     onPressed: () {},
-                    child: Text('Forgot Password?'),
+                    child: const Text('Forgot Password?'),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Colors.green,
                 ),
-                child: Text('Login'),
+                child: const Text('Login'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: _signInWithGoogle,
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Colors.grey.shade300,
                 ),
                 icon: Image.asset('assets/google_icon.png', height: 24),
-                label: Text('Login with Google'),
+                label: const Text('Login with Google'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don’t have an Account?"),
+                  const Text("Don’t have an Account?"),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -187,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(builder: (context) => RegisterScreen()),
                       );
                     },
-                    child: Text('Create Account'),
+                    child: const Text('Create Account'),
                   ),
                 ],
               ),

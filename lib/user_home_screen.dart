@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'custom_navbar.dart'; // Your custom nav bar
 
 class UserHomeScreen extends StatefulWidget {
+  const UserHomeScreen({super.key});
+
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
 }
@@ -30,8 +32,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Alerts Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Text(
                 'Alerts',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -40,8 +42,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             _buildAlertsSection(),
             
             // Recent Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Text(
                 'Recent',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -50,8 +52,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             _buildRecentSection(),
 
             // Notification Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Text(
                 'Notification',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -71,12 +73,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   // Search bar widget
   Widget _buildSearchBar() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextField(
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          prefixIcon: Icon(Icons.search, color: Colors.black),
+          prefixIcon: const Icon(Icons.search, color: Colors.black),
           hintText: 'Search',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
@@ -89,7 +91,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   // Alerts section with images
   Widget _buildAlertsSection() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -106,7 +108,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget _buildAlertCard(String title, String imageUrl) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
+      child: SizedBox(
         width: 200,
         child: Column(
           children: [
@@ -116,10 +118,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 child: Image.network(imageUrl, fit: BoxFit.cover),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
@@ -147,13 +149,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
         ),
-        child: Row(
+        child: const Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 40),
             SizedBox(width: 16),
