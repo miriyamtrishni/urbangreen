@@ -1,16 +1,21 @@
+// lib/screens/admin/add_notification_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../../utils/constants.dart';
+import '../../models/notification_model.dart';
 
 class AddNotificationScreen extends StatefulWidget {
   final String? notificationId;
-  final Map<String, dynamic>? existingData;
+  final NotificationModel? existingData;
 
-  const AddNotificationScreen({super.key, this.notificationId, this.existingData});
+  const AddNotificationScreen({Key? key, this.notificationId, this.existingData})
+      : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddNotificationScreenState createState() => _AddNotificationScreenState();
 }
 
@@ -25,10 +30,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
   void initState() {
     super.initState();
     if (widget.existingData != null) {
-      _titleController.text = widget.existingData!['title'];
-      _descriptionController.text = widget.existingData!['description'];
-      _selectedCategory = widget.existingData!['category'];
-      _companyIconUrl = widget.existingData!['companyIconUrl'];
+      _titleController.text = widget.existingData!.title;
+      _descriptionController.text = widget.existingData!.description;
+      _selectedCategory = widget.existingData!.category;
+      _companyIconUrl = widget.existingData!.companyIconUrl;
     }
   }
 
@@ -40,7 +45,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
 
     if (widget.notificationId != null) {
       // Update the notification
-      await FirebaseFirestore.instance.collection('notifications').doc(widget.notificationId).update({
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(widget.notificationId)
+          .update({
         'title': _titleController.text.trim(),
         'description': _descriptionController.text.trim(),
         'category': _selectedCategory,
@@ -59,7 +67,9 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Notification ${widget.notificationId != null ? 'updated' : 'added'} successfully')),
+      SnackBar(
+          content: Text(
+              'Notification ${widget.notificationId != null ? 'updated' : 'added'} successfully')),
     );
 
     Navigator.pop(context); // Return to the admin home screen
@@ -87,8 +97,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.notificationId != null ? 'Edit Notification' : 'Add Notification'),
-        backgroundColor: Colors.green,
+        title: Text(widget.notificationId != null
+            ? 'Edit Notification'
+            : 'Add Notification'),
+        backgroundColor: AppColors.primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -125,7 +137,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
               children: [
                 _iconFile == null
                     ? (_companyIconUrl != null
-                        ? Image.network(_companyIconUrl!, width: 50, height: 50)
+                        ? Image.network(_companyIconUrl!,
+                            width: 50, height: 50)
                         : Container())
                     : Image.file(_iconFile!, width: 50, height: 50),
                 const Spacer(),
@@ -138,8 +151,11 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _addOrUpdateNotification,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: Text(widget.notificationId != null ? 'Update Notification' : 'Add Notification'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor),
+              child: Text(widget.notificationId != null
+                  ? 'Update Notification'
+                  : 'Add Notification'),
             ),
           ],
         ),

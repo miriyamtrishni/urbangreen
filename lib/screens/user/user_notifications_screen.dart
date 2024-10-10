@@ -1,26 +1,31 @@
+// lib/screens/user/user_notifications_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'custom_navbar.dart'; // Your custom nav bar
-import 'notification_detail_screen.dart'; // For showing the notification details
+import '../../widgets/custom_navbar.dart';
+import 'notification_detail_screen.dart';
+import '../../models/notification_model.dart';
+import '../../utils/constants.dart';
 
 class UserNotificationScreen extends StatefulWidget {
-  const UserNotificationScreen({super.key});
+  const UserNotificationScreen({Key? key}) : super(key: key);
 
   @override
   _UserNotificationScreenState createState() => _UserNotificationScreenState();
 }
 
 class _UserNotificationScreenState extends State<UserNotificationScreen> {
-  int _selectedIndex = 1; // Set Notification as initially selected
+  int _selectedIndex = 3; // Set Notification as initially selected
   String _filter = 'Marked'; // Default filter for notifications
   String _categoryFilter = 'All'; // Category filter: All, CEB, Waterboard
 
-  final Stream<QuerySnapshot> _notificationStream = FirebaseFirestore.instance.collection('notifications').snapshots();
+  final Stream<QuerySnapshot> _notificationStream =
+      FirebaseFirestore.instance.collection('notifications').snapshots();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    // No need to call CustomNavBar.navigateToScreen here
   }
 
   void _setFilter(String filter) {
@@ -39,7 +44,7 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primaryColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -65,9 +70,11 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _notificationStream,
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text("Error loading notifications"));
+                  return const Center(
+                      child: Text("Error loading notifications"));
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -75,39 +82,50 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
                 }
 
                 if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No notifications available"));
+                  return const Center(
+                      child: Text("No notifications available"));
                 }
 
                 // Filter notifications based on category and marked/unmarked
-                List<DocumentSnapshot> filteredNotifications = snapshot.data!.docs.where((doc) {
-                  Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
-                  bool categoryMatches = _categoryFilter == 'All' || data['category'] == _categoryFilter;
+                List<DocumentSnapshot> filteredNotifications =
+                    snapshot.data!.docs.where((doc) {
+                  Map<String, dynamic> data =
+                      doc.data()! as Map<String, dynamic>;
+                  bool categoryMatches = _categoryFilter == 'All' ||
+                      data['category'] == _categoryFilter;
                   if (!categoryMatches) return false;
 
-                  if (_filter == 'Marked' && data['isMarked'] == true) return true;
-                  if (_filter == 'Unmarked' && (data['isMarked'] == false || data['isMarked'] == null)) return true;
+                  if (_filter == 'Marked' && data['isMarked'] == true)
+                    return true;
+                  if (_filter == 'Unmarked' &&
+                      (data['isMarked'] == false || data['isMarked'] == null))
+                    return true;
                   return false;
                 }).toList();
 
                 return ListView(
                   children: filteredNotifications.map((doc) {
-                    Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+                    NotificationModel notification = NotificationModel.fromMap(
+                        doc.data()! as Map<String, dynamic>, doc.id);
                     return ListTile(
-                      leading: Image.network(data['companyIconUrl'] ?? '', width: 40, height: 40),
-                      title: Text(data['title']),
+                      leading: notification.companyIconUrl != null
+                          ? Image.network(notification.companyIconUrl!,
+                              width: 40, height: 40)
+                          : null,
+                      title: Text(notification.title),
                       subtitle: Text(
-                        data['description'],
-                        maxLines: 2, // Show only two lines of the description
-                        overflow: TextOverflow.ellipsis, // Add "..." if text overflows
+                        notification.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      trailing: const Text("3h"), // Placeholder for time
+                      trailing:
+                          Text(_getTimeDifference(notification.createdAt)),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => NotificationDetailScreen(
-                              notificationData: data,
-                              notificationId: doc.id,
+                              notification: notification,
                             ),
                           ),
                         );
@@ -135,9 +153,11 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
                     _setFilter('Marked');
                   },
                   icon: const Icon(Icons.mark_email_read),
-                  label: const Text('Mark'),
+                  label: const Text('Marked'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _filter == 'Marked' ? Colors.green : Colors.grey.shade300,
+                    backgroundColor: _filter == 'Marked'
+                        ? AppColors.primaryColor
+                        : Colors.grey.shade300,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                   ),
                 ),
@@ -146,9 +166,11 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
                     _setFilter('Unmarked');
                   },
                   icon: const Icon(Icons.mark_email_unread),
-                  label: const Text('Unmark'),
+                  label: const Text('Unmarked'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _filter == 'Unmarked' ? Colors.green : Colors.grey.shade300,
+                    backgroundColor: _filter == 'Unmarked'
+                        ? AppColors.primaryColor
+                        : Colors.grey.shade300,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                   ),
                 ),
@@ -171,19 +193,34 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
         _setCategoryFilter(categoryLabel);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: _categoryFilter == categoryLabel ? Colors.green : Colors.grey.shade200,
+          color: _categoryFilter == categoryLabel
+              ? AppColors.primaryColor
+              : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           categoryLabel,
           style: TextStyle(
-            color: _categoryFilter == categoryLabel ? Colors.white : Colors.black,
+            color: _categoryFilter == categoryLabel
+                ? Colors.white
+                : Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
     );
+  }
+
+  // Helper method to format time difference
+  String _getTimeDifference(Timestamp timestamp) {
+    final difference = DateTime.now().difference(timestamp.toDate());
+    if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else {
+      return '${difference.inDays}d';
+    }
   }
 }

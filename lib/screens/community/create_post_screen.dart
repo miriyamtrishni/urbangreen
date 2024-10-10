@@ -1,12 +1,14 @@
+// lib/screens/community/create_post_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../utils/constants.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  const CreatePostScreen({Key? key}) : super(key: key);
 
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
@@ -37,15 +39,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       // Upload image to Firebase Storage
       String imageUrl = await _uploadImage(_imageFile!);
 
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
       // Save post details to Firestore, including the user's UID
       await FirebaseFirestore.instance.collection('posts').add({
-        'userId': FirebaseAuth.instance.currentUser!.uid,  // Save the user's UID
-        'username': FirebaseAuth.instance.currentUser!.displayName ?? 'Anonymous',
+        'userId': currentUser!.uid, // Save the user's UID
+        'username': currentUser.displayName ?? 'Anonymous',
         'caption': _captionController.text,
         'location': _locationController.text,
         'category': _category,
         'imageUrl': imageUrl,
         'createdAt': FieldValue.serverTimestamp(),
+        'likes': [],
       });
 
       // Show success message and navigate back
@@ -68,6 +73,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Post'),
+        backgroundColor: AppColors.primaryColor,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -81,7 +87,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               onPressed: _pickImage,
               icon: const Icon(Icons.photo),
               label: const Text('Pick Image'),
-              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: AppColors.primaryColor,
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
@@ -121,8 +130,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _createPost,
-              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
-              child: Text('Post'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: AppColors.primaryColor,
+              ),
+              child: const Text('Post'),
             ),
           ],
         ),

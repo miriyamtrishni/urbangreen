@@ -1,11 +1,15 @@
+// lib/screens/admin/admin_home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_notification_screen.dart';
+import '../../models/notification_model.dart';
+import '../../utils/constants.dart';
 
 class AdminHomeScreen extends StatefulWidget {
-  const AdminHomeScreen({super.key});
+  const AdminHomeScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AdminHomeScreenState createState() => _AdminHomeScreenState();
 }
 
@@ -19,7 +23,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notifications"),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -27,7 +31,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               // Navigate to add notification screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddNotificationScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const AddNotificationScreen()),
               );
             },
           ),
@@ -35,7 +40,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _notificationStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: Text("Error loading notifications"));
           }
@@ -53,7 +59,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               .where((doc) => _isWithinLastDays(doc, 7))
               .toList();
           List<DocumentSnapshot> last30Days = snapshot.data!.docs
-              .where((doc) => !_isWithinLastDays(doc, 7) && _isWithinLastDays(doc, 30))
+              .where((doc) =>
+                  !_isWithinLastDays(doc, 7) && _isWithinLastDays(doc, 30))
               .toList();
 
           return ListView(
@@ -72,7 +79,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   bool _isWithinLastDays(DocumentSnapshot doc, int days) {
     Timestamp timestamp = doc['createdAt'];
     DateTime notificationDate = timestamp.toDate();
-    return notificationDate.isAfter(DateTime.now().subtract(Duration(days: days)));
+    return notificationDate
+        .isAfter(DateTime.now().subtract(Duration(days: days)));
   }
 
   Widget _buildSectionTitle(String title) {
@@ -89,10 +97,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return Column(
       children: notifications.map((doc) {
         Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+        NotificationModel notification =
+            NotificationModel.fromMap(data, doc.id);
         return ListTile(
-          leading: Image.network(data['companyIconUrl'] ?? '', width: 40, height: 40), // Display the icon
-          title: Text(data['title']),
-          subtitle: Text(data['description']),
+          leading: notification.companyIconUrl != null
+              ? Image.network(notification.companyIconUrl!,
+                  width: 40, height: 40)
+              : null, // Display the icon if available
+          title: Text(notification.title),
+          subtitle: Text(notification.description),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -103,7 +116,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddNotificationScreen(notificationId: doc.id, existingData: data),
+                      builder: (context) => AddNotificationScreen(
+                        notificationId: notification.id,
+                        existingData: notification,
+                      ),
                     ),
                   );
                 },
@@ -111,7 +127,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  _deleteNotification(doc.id);
+                  _deleteNotification(notification.id);
                 },
               ),
             ],
@@ -123,7 +139,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   // Delete the notification from Firestore
   void _deleteNotification(String notificationId) {
-    FirebaseFirestore.instance.collection('notifications').doc(notificationId).delete();
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(notificationId)
+        .delete();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Notification deleted successfully')),
     );

@@ -1,50 +1,54 @@
+// lib/screens/authentication/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'admin_home_screen.dart';
-import 'user_home_screen.dart';
+import '../admin/admin_home_screen.dart';
+import '../user/user_home_screen.dart';
+import '../../utils/constants.dart';
+import '../../services/authentication_service.dart';
+import '../../models/user_model.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final AuthenticationService _authService = AuthenticationService();
 
   Future<void> _login() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      UserCredential userCredential = await _authService.signInWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
 
-      // Fetch user role from Firestore
+      // Fetch user data from Firestore
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user!.uid)
           .get();
 
       if (userDoc.exists) {
-        String role = userDoc.get('role');
+        UserModel user = UserModel.fromMap(
+            userDoc.data() as Map<String, dynamic>, userDoc.id);
 
         // Navigate based on role
-        if (role == 'admin') {
+        if (user.role == 'admin') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AdminHomeScreen()),
+            MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => UserHomeScreen()),
+            MaterialPageRoute(builder: (context) => const UserHomeScreen()),
           );
         }
       } else {
@@ -64,45 +68,41 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential userCredential = await _authService.signInWithGoogle();
 
-        // Check if user data exists in Firestore
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      // Check if user data exists in Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        // New user, save data to Firestore
+        await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
-            .get();
+            .set({
+          'name': userCredential.user!.displayName,
+          'email': userCredential.user!.email,
+          'role': 'user', // Default role
+        });
+      }
 
-        if (!userDoc.exists) {
-          // New user, save data to Firestore
-          await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-            'name': userCredential.user!.displayName,
-            'email': userCredential.user!.email,
-            'role': 'user', // Default role
-          });
-        }
+      // Fetch role
+      String role =
+          (userDoc.data() as Map<String, dynamic>?)?['role'] ?? 'user';
 
-        // Fetch role
-        String role = (userDoc.data() as Map<String, dynamic>?)?['role'] ?? 'user';
-
-        // Navigate based on role
-        if (role == 'admin') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AdminHomeScreen()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => UserHomeScreen()),
-          );
-        }
+      // Navigate based on role
+      if (role == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const UserHomeScreen()),
+        );
       }
     } catch (e) {
       print('Error: $e');
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center, // Remove this line to prevent centering
             children: [
               const SizedBox(height: 60),
               const Text(
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.green,
+                  backgroundColor: AppColors.primaryColor,
                 ),
                 child: const Text('Login'),
               ),
@@ -186,7 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegisterScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()),
                       );
                     },
                     child: const Text('Create Account'),

@@ -1,22 +1,23 @@
+// lib/screens/community/edit_post_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'custom_navbar.dart';  // Import the custom navigation bar
+import '../../models/post_model.dart';
+import '../../utils/constants.dart';
 
 class EditPostScreen extends StatefulWidget {
   final String postId;
-  final DocumentSnapshot postData;
+  final PostModel postData;
 
-  const EditPostScreen({super.key, required this.postId, required this.postData});
+  const EditPostScreen({Key? key, required this.postId, required this.postData}) : super(key: key);
 
   @override
   _EditPostScreenState createState() => _EditPostScreenState();
 }
 
 class _EditPostScreenState extends State<EditPostScreen> {
-  int _selectedIndex = 1; // Set Community as initially selected
   final TextEditingController _captionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   String? _category;
@@ -26,10 +27,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
   @override
   void initState() {
     super.initState();
-    _captionController.text = widget.postData['caption'];
-    _locationController.text = widget.postData['location'];
-    _category = widget.postData['category'];
-    _imageUrl = widget.postData['imageUrl'];
+    _captionController.text = widget.postData.caption;
+    _locationController.text = widget.postData.location;
+    _category = widget.postData.category;
+    _imageUrl = widget.postData.imageUrl;
   }
 
   Future<void> _pickImage() async {
@@ -71,10 +72,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Post'),
+        backgroundColor: AppColors.primaryColor,
         actions: [
           TextButton(
             onPressed: _updatePost,
-            child: const Text('Save', style: TextStyle(color: Color.fromARGB(255, 156, 32, 32))), // Save button in AppBar
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ), // Save button in AppBar
           ),
         ],
       ),
@@ -92,7 +97,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
               onPressed: _pickImage,
               icon: const Icon(Icons.photo),
               label: const Text('Change Photo'),
-              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: AppColors.primaryColor,
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
@@ -131,14 +139,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: CustomNavBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
     );
   }

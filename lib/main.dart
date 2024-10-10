@@ -1,14 +1,11 @@
+// lib/main.dart
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:urbangreen/community_feed_screen.dart';
-import 'package:urbangreen/create_post_screen.dart';
-import 'package:urbangreen/user_notifications_screen.dart';
-import 'login_screen.dart';
-import 'user_home_screen.dart';
-import 'profile_screen.dart';  // Import Profile screen
-import 'bus_screen.dart';
-
+import 'utils/theme.dart';
+import 'screens/authentication/login_screen.dart';
+import 'screens/user/user_home_screen.dart';
+import 'routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,28 +24,15 @@ void main() async {
 class MyApp extends StatelessWidget {
   final Widget initialScreen;
 
-  const MyApp({super.key, required this.initialScreen});
+  const MyApp({Key? key, required this.initialScreen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UrbanGreen',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      // Define the routes
-      routes: {
-        '/home': (context) => UserHomeScreen(),
-        
-        '/community': (context) => CommunityFeedScreen(),
-        '/bus': (context) => BusScreen(),
-        '/notification': (context) => UserNotificationScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/login': (context) => LoginScreen(),
-        '/add_post': (context) => CreatePostScreen(),
-      },
-      home: initialScreen,  // Start with the initial screen
-      
+      theme: appTheme,
+      routes: routes,
+      home: initialScreen,
     );
   }
 }

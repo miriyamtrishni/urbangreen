@@ -1,13 +1,17 @@
+// lib/screens/authentication/register_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../utils/constants.dart';
+import '../../services/authentication_service.dart';
+import '../../models/user_model.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
@@ -19,29 +23,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   String? _selectedCityCouncil;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final AuthenticationService _authService = AuthenticationService();
 
   Future<void> _register() async {
     if (_passwordController.text == _confirmPasswordController.text) {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await _authService.signUpWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
+
+        // Create a new user model
+        UserModel newUser = UserModel(
+          uid: userCredential.user!.uid,
+          name: _nameController.text.trim(),
+          username: _usernameController.text.trim(),
           email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+          cityCouncil: _selectedCityCouncil,
+          role: 'user',
         );
 
         // Save user data to Firestore
-        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-          'name': _nameController.text.trim(),
-          'username': _usernameController.text.trim(),
-          'email': _emailController.text.trim(),
-          'cityCouncil': _selectedCityCouncil,
-          'role': 'user', // Default role
-        });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(newUser.uid)
+            .set(newUser.toMap());
 
         // Navigate back to Login Screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
 
         // Optionally, show a success message
@@ -63,52 +74,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> _signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-        // Check if user data exists in Firestore
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .get();
-
-        if (!userDoc.exists) {
-          // New user, save data to Firestore
-          await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-            'name': userCredential.user!.displayName,
-            'email': userCredential.user!.email,
-            'role': 'user', // Default role
-          });
-        }
-
-        // After registration, navigate back to Login Screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
-
-        // Optionally, show a success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful. Please log in.')),
-        );
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google Sign-In Error: $e')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center, // Remove this line to prevent centering
             children: [
               const SizedBox(height: 60),
               const Text(
@@ -192,13 +157,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: _register,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.green,
+                  backgroundColor: AppColors.primaryColor,
                 ),
                 child: const Text('Register'),
               ),
               const SizedBox(height: 10),
               ElevatedButton.icon(
-                onPressed: _signInWithGoogle,
+                onPressed: () {
+                  // Optional: Implement Google Sign-In on registration if needed
+                  // For now, we'll just show a message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Google Sign-In not implemented on registration.')),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Colors.grey.shade300,
@@ -215,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
                       );
                     },
                     child: const Text('Login'),
