@@ -5,6 +5,7 @@ import 'register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../admin/admin_home_screen.dart';
 import '../user/user_home_screen.dart';
+import '../driver/driver_home_screen.dart'; // Import the DriverHomeScreen
 import '../../utils/constants.dart';
 import '../../services/authentication_service.dart';
 import '../../models/user_model.dart';
@@ -13,7 +14,6 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -44,6 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+          );
+        } else if (user.role == 'driver') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
           );
         } else {
           Navigator.pushReplacement(
@@ -98,6 +103,11 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
         );
+      } else if (role == 'driver') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
+        );
       } else {
         Navigator.pushReplacement(
           context,
@@ -116,12 +126,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Using SingleChildScrollView to prevent overflow
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center, // Remove this line to prevent centering
             children: [
               const SizedBox(height: 60),
               const Text(

@@ -1,18 +1,18 @@
-// lib/screens/bus/bus_screen.dart
+// lib/screens/bus/available_bus_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'available_bus_screen.dart';
+import 'bus_location_map_screen.dart';
 import '../../widgets/custom_navbar.dart';
-import '../../utils/constants.dart';
 
-class BusScreen extends StatefulWidget {
-  const BusScreen({Key? key}) : super(key: key);
+class AvailableBusScreen extends StatefulWidget {
+  final String routeNumber;
+  const AvailableBusScreen({Key? key, required this.routeNumber}) : super(key: key);
 
   @override
-  _BusScreenState createState() => _BusScreenState();
+  _AvailableBusScreenState createState() => _AvailableBusScreenState();
 }
 
-class _BusScreenState extends State<BusScreen> {
+class _AvailableBusScreenState extends State<AvailableBusScreen> {
   int _selectedIndex = 2; // Set Bus as initially selected
 
   void _onItemTapped(int index) {
@@ -26,30 +26,34 @@ class _BusScreenState extends State<BusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Available Bus Routes'),
-        backgroundColor: AppColors.primaryColor,
+        title: Text('Buses on Route ${widget.routeNumber}'),
+        backgroundColor: Colors.green,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('bus_routes').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('driver_buses')
+            .where('route', isEqualTo: widget.routeNumber)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          var routes = snapshot.data!.docs;
+          var buses = snapshot.data!.docs;
 
           return ListView.builder(
-            itemCount: routes.length,
+            itemCount: buses.length,
             itemBuilder: (context, index) {
-              var routeData = routes[index];
+              var busData = buses[index];
               return ListTile(
-                title: Text('${routeData['routeNumber']} - ${routeData['beginning']} to ${routeData['destination']}'),
+                title: Text('Bus License: ${busData['licensePlate']}'),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AvailableBusScreen(
-                        routeNumber: routeData['routeNumber'],
+                      builder: (context) => BusLocationMapScreen(
+                        busId: busData.id,
+                        licensePlate: busData['licensePlate'],
                       ),
                     ),
                   );

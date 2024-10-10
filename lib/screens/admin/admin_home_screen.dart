@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_notification_screen.dart';
 import '../../models/notification_model.dart';
 import '../../utils/constants.dart';
+import '../../widgets/custom_admin_navbar.dart'; // Import the custom admin nav bar
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _AdminHomeScreenState createState() => _AdminHomeScreenState();
 }
 
@@ -17,6 +17,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   // Stream to listen for notifications in Firestore
   final Stream<QuerySnapshot> _notificationStream =
       FirebaseFirestore.instance.collection('notifications').snapshots();
+  
+  int _selectedIndex = 0; // Set Notifications as initially selected
+
+  // Handle navigation bar item tap
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +81,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             ],
           );
         },
+      ),
+      // Add the custom admin nav bar
+      bottomNavigationBar: CustomAdminNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
