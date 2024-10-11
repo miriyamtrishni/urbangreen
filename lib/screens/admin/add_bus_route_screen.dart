@@ -146,61 +146,73 @@ class _AddBusRouteScreenState extends State<AddBusRouteScreen> {
                 padding: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(routeId != null ? 'Edit Route' : 'Add Route',
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold)),
+                          style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _routeNumberController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Route Number',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _beginningController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Beginning',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _destinationController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Destination',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Bus Stops'),
                           ..._busStopControllers.asMap().entries.map((entry) {
                             int index = entry.key;
                             TextEditingController controller = entry.value;
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: controller,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Bus Stop',
-                                      border: OutlineInputBorder(),
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller,
+                                      decoration: InputDecoration(
+                                        labelText: 'Bus Stop',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    setDialogState(() {
-                                      _removeBusStopField(index);
-                                    });
-                                  },
-                                ),
-                              ],
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      setDialogState(() {
+                                        _removeBusStopField(index);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             );
                           }).toList(),
                           TextButton.icon(
@@ -257,7 +269,6 @@ class _AddBusRouteScreenState extends State<AddBusRouteScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Bus Route'),
-        backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -287,21 +298,23 @@ class _AddBusRouteScreenState extends State<AddBusRouteScreen> {
             itemBuilder: (context, index) {
               RouteModel route = RouteModel.fromMap(routes[index].data() as Map<String, dynamic>, routes[index].id);
 
-              return ListTile(
-                title: Text('${route.routeNumber} - ${route.beginning} to ${route.destination}'),
-                subtitle: Text('Stops: ${route.busStops.join(', ')}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () => _editRoute(route.id, route),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _deleteRoute(route.id),
-                    ),
-                  ],
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: ListTile(
+                  title: Text('${route.routeNumber} - ${route.beginning} to ${route.destination}'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _editRoute(route.id, route),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteRoute(route.id),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

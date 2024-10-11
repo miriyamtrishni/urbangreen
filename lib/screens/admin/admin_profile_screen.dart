@@ -1,23 +1,22 @@
-// lib/screens/user/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../widgets/custom_navbar.dart';
+import '../../widgets/custom_admin_navbar.dart';
 import '../../utils/constants.dart';
 import '../authentication/login_screen.dart';
 import 'dart:io';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class AdminProfileScreen extends StatefulWidget {
+  const AdminProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _AdminProfileScreenState createState() => _AdminProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 4; // Set Profile as initially selected
+class _AdminProfileScreenState extends State<AdminProfileScreen> {
+  int _selectedIndex = 2;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -26,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _reEnterPasswordController = TextEditingController();
 
   User? _currentUser;
-  String? _profileImageUrl; // For storing the user's profile image URL
+  String? _profileImageUrl;
 
   @override
   void initState() {
@@ -34,7 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
   }
 
-  // Fetch user data from Firebase
   Future<void> _loadUserData() async {
     _currentUser = FirebaseAuth.instance.currentUser;
     if (_currentUser != null) {
@@ -46,18 +44,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _nameController.text = userDoc.get('name');
         _usernameController.text = userDoc.get('username');
         _emailController.text = userDoc.get('email');
-        _profileImageUrl = userDoc.get('profileImage'); // Fetch profile image URL if exists
+        _profileImageUrl = userDoc.get('profileImage');
       }
       setState(() {});
     }
   }
 
-  // Update profile data in Firebase
   Future<void> _updateProfile() async {
     if (_passwordController.text == _reEnterPasswordController.text) {
       try {
         if (_currentUser != null) {
-          // Update user data in Firestore
           await FirebaseFirestore.instance
               .collection('users')
               .doc(_currentUser!.uid)
@@ -67,12 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'email': _emailController.text.trim(),
           });
 
-          // Update email in Firebase Authentication if changed
           if (_emailController.text.trim() != _currentUser!.email) {
             await _currentUser!.updateEmail(_emailController.text.trim());
           }
 
-          // Update password in Firebase Authentication if changed
           if (_passwordController.text.isNotEmpty) {
             await _currentUser!.updatePassword(_passwordController.text.trim());
           }
@@ -81,7 +75,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SnackBar(content: Text('Profile updated successfully')));
         }
       } catch (e) {
-        print('Error: $e');
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Profile update failed: $e')));
       }
@@ -91,7 +84,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // Upload profile image to Firebase Storage
   Future<void> _uploadImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -103,10 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       UploadTask uploadTask = storageReference.putFile(File(image.path));
       TaskSnapshot taskSnapshot = await uploadTask;
 
-      // Get the download URL for the image
       String downloadURL = await taskSnapshot.ref.getDownloadURL();
 
-      // Update the user's profile image URL in Firestore
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUser!.uid)
@@ -120,7 +110,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // Log out the user
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(context,
@@ -131,7 +120,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _selectedIndex = index;
     });
-    // Handle navigation logic when a different navbar item is tapped
   }
 
   @override
@@ -140,30 +128,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            const Text(
-              'Edit profile',
-              style: TextStyle(color: Colors.black, fontSize: 18),
-            ),
-            TextButton(
-              onPressed: _updateProfile,
-              child: const Text(
-                'Save',
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ),
-          ],
-        ),
+        toolbarHeight: 70,
+        title: const Text('Edit profile', style: TextStyle(color: Colors.black)),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: _updateProfile,
+            child: const Text('Save', style: TextStyle(color: Colors.black)),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -179,14 +152,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundImage: _profileImageUrl != null
                           ? NetworkImage(_profileImageUrl!)
                           : const AssetImage('assets/default_profile.png')
-                              as ImageProvider, // Default image if no profile image
+                              as ImageProvider,
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: IconButton(
-                        icon:
-                            const Icon(Icons.camera_alt, color: Colors.white),
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
                         onPressed: _uploadImage,
                       ),
                     ),
@@ -197,8 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10),
             Text(
               _nameController.text,
-              style: const TextStyle(
-                  fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Padding(
@@ -211,27 +182,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 10),
                   _buildTextField(_emailController, 'Enter your email'),
                   const SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Choose your city council',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: ['City Council 1', 'City Council 2']
+                        .map((String cityCouncil) {
+                      return DropdownMenuItem(
+                        value: cityCouncil,
+                        child: Text(cityCouncil),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {},
+                  ),
+                  const SizedBox(height: 10),
                   _buildPasswordField(_passwordController, 'Create password'),
                   const SizedBox(height: 10),
-                  _buildPasswordField(
-                      _reEnterPasswordController, 'Re-enter password'),
+                  _buildPasswordField(_reEnterPasswordController,
+                      'Re-enter password'),
                 ],
               ),
             ),
             const SizedBox(height: 40),
-            ElevatedButton.icon(
+            TextButton(
               onPressed: _logout,
-              icon: const Icon(Icons.logout),
-              label: const Text('Logout'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: AppColors.accentColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.logout),
+                  SizedBox(width: 5),
+                  Text('Logout'),
+                ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: CustomNavBar(
+      bottomNavigationBar: CustomAdminNavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
@@ -243,7 +231,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppColors.primaryColor),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primaryColor),
         ),
@@ -260,15 +247,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       obscureText: true,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppColors.primaryColor),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primaryColor),
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primaryColor, width: 2.0),
         ),
-        suffixIcon:
-            const Icon(Icons.visibility_off, color: AppColors.primaryColor),
+        suffixIcon: const Icon(Icons.visibility_off, color: AppColors.primaryColor),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../admin/admin_home_screen.dart';
 import '../user/user_home_screen.dart';
-import '../driver/driver_home_screen.dart'; // Import the DriverHomeScreen
+import '../driver/driver_home_screen.dart';
 import '../../utils/constants.dart';
 import '../../services/authentication_service.dart';
 import '../../models/user_model.dart';
@@ -21,15 +21,54 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthenticationService _authService = AuthenticationService();
+  bool _isRememberMeChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Check if user is already logged in
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    User? currentUser = _authService.getCurrentUser();
+    if (currentUser != null) {
+      // Fetch user data from Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      if (userDoc.exists) {
+        UserModel user = UserModel.fromMap(
+            userDoc.data() as Map<String, dynamic>, userDoc.id);
+
+        // Navigate based on role
+        _navigateToHome(user.role);
+      }
+    }
+  }
 
   Future<void> _login() async {
     try {
+      if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields.')),
+        );
+        return;
+      }
+
       UserCredential userCredential = await _authService.signInWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      // Fetch user data from Firestore
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user!.uid)
@@ -39,86 +78,35 @@ class _LoginScreenState extends State<LoginScreen> {
         UserModel user = UserModel.fromMap(
             userDoc.data() as Map<String, dynamic>, userDoc.id);
 
-        // Navigate based on role
-        if (user.role == 'admin') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
-          );
-        } else if (user.role == 'driver') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const UserHomeScreen()),
-          );
-        }
+        _navigateToHome(user.role);
       } else {
-        // If user document doesn't exist
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User data not found.')),
         );
       }
     } catch (e) {
       print('Error: $e');
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Error: $e')),
       );
     }
   }
 
-  Future<void> _signInWithGoogle() async {
-    try {
-      UserCredential userCredential = await _authService.signInWithGoogle();
-
-      // Check if user data exists in Firestore
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
-
-      if (!userDoc.exists) {
-        // New user, save data to Firestore
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'name': userCredential.user!.displayName,
-          'email': userCredential.user!.email,
-          'role': 'user', // Default role
-        });
-      }
-
-      // Fetch role
-      String role =
-          (userDoc.data() as Map<String, dynamic>?)?['role'] ?? 'user';
-
-      // Navigate based on role
-      if (role == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
-        );
-      } else if (role == 'driver') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const UserHomeScreen()),
-        );
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google Sign-In Error: $e')),
+  void _navigateToHome(String role) {
+    if (role == 'admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+      );
+    } else if (role == 'driver') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const UserHomeScreen()),
       );
     }
   }
@@ -157,7 +145,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(value: false, onChanged: (bool? value) {}),
+                  Checkbox(
+                    value: _isRememberMeChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isRememberMeChecked = value ?? false;
+                      });
+                    },
+                  ),
                   const Text('Remember me'),
                   const Spacer(),
                   TextButton(
@@ -177,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 10),
               ElevatedButton.icon(
-                onPressed: _signInWithGoogle,
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Colors.grey.shade300,

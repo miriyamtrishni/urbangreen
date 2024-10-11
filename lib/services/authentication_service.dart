@@ -20,18 +20,11 @@ class AuthenticationService {
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
-      // Operation was canceled by the user
       throw FirebaseAuthException(
           code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
     }
 
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-      throw FirebaseAuthException(
-          code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
-          message: 'Missing Google Auth Token');
-    }
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -40,8 +33,14 @@ class AuthenticationService {
     return _auth.signInWithCredential(credential);
   }
 
+  // Check if user is logged in
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
   // Sign Out
-  Future<void> signOut() {
+  Future<void> signOut() async {
+    await _googleSignIn.signOut(); // Sign out of Google if logged in via Google
     return _auth.signOut();
   }
 }

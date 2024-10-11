@@ -168,7 +168,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Bus License Plate'),
-        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -184,7 +183,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               stream: FirebaseFirestore.instance.collection('bus_routes').snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 List<DropdownMenuItem<String>> routeItems = snapshot.data!.docs.map((doc) {
@@ -203,6 +202,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                       selectedRoute = value;
                     });
                   },
+                  isExpanded: true,
                 );
               },
             ),
@@ -224,7 +224,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               onPressed: _addBus,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.green,
+                foregroundColor: Colors.white, // Set font color to white
               ),
               child: const Text('Add Bus and Share Location'),
             ),
@@ -238,7 +238,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Share Location'),
-        backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -268,7 +267,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                   onPressed: isSharingLocation ? _stopSharingLocation : _startSharingLocation,
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: isSharingLocation ? Colors.red : Colors.green,
+                    backgroundColor: isSharingLocation ? Colors.red : const Color.fromRGBO(0, 191, 99, 1),
+                    foregroundColor: Colors.white, // Set font color to white
                   ),
                   child: Text(isSharingLocation ? 'Stop Sharing Location' : 'Share Location'),
                 ),
@@ -278,6 +278,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                     backgroundColor: Colors.red,
+                    foregroundColor: Colors.white, // Set font color to white
                   ),
                   child: const Text('Delete Bus License Plate'),
                 ),

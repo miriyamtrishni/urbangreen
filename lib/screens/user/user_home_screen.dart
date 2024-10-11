@@ -1,7 +1,12 @@
 // lib/screens/user/user_home_screen.dart
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import '../../widgets/custom_navbar.dart';
 import '../../utils/constants.dart';
+import '../../models/post_model.dart';
+import '../../models/notification_model.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
@@ -12,6 +17,16 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   int _selectedIndex = 0; // Set Home as initially selected
+  LocationData? _currentLocation;
+  final Location _location = Location();
+  // ignore: unused_field
+  late GoogleMapController _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentLocation();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -19,27 +34,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     });
   }
 
-  // Dummy data for demonstration
-  final List<Map<String, String>> alerts = [
-    {
-      'title': 'Heavy Traffic',
-      'imageUrl':
-          'https://www.example.com/images/traffic.jpg', // Replace with actual image URLs
-    },
-    {
-      'title': 'Emergency Power Outage',
-      'imageUrl': 'https://www.example.com/images/power_outage.jpg',
-    },
-  ];
-
-  final List<Map<String, String>> notifications = [
-    {
-      'message':
-          'Scheduled power outage from 1:00 PM to 4:00 PM in your area on September 15',
-      'time': '3h',
-    },
-    // Add more notifications as needed
-  ];
+  Future<void> _fetchCurrentLocation() async {
+    _currentLocation = await _location.getLocation();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +53,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Alerts Section
+            // Community Section
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Text(
-                'Alerts',
+                'Community',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            _buildAlertsSection(),
+            _buildCommunitySection(),
 
             // Recent Section
             const Padding(
@@ -113,25 +111,39 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
-  // Alerts section with images
-  Widget _buildAlertsSection() {
+  // Community section with recent posts
+  Widget _buildCommunitySection() {
     return SizedBox(
       height: 150,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: alerts.length,
-        itemBuilder: (context, index) {
-          return _buildAlertCard(
-            alerts[index]['title']!,
-            alerts[index]['imageUrl']!,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('createdAt', descending: true)
+            .limit(3)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final posts = snapshot.data!.docs.map((doc) {
+            return PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+          }).toList();
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return _buildPostCard(posts[index]);
+            },
           );
         },
       ),
     );
   }
 
-  // Alert card widget
-  Widget _buildAlertCard(String title, String imageUrl) {
+  // Post card widget
+  Widget _buildPostCard(PostModel post) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -141,12 +153,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(imageUrl, fit: BoxFit.cover),
+                child: Image.network(post.imageUrl, fit: BoxFit.cover),
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              title,
+              post.caption,
               style: const TextStyle(fontSize: 16),
             ),
           ],
@@ -155,66 +167,100 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
-  // Recent section with map (static image for demo)
+  // Recent section with Google Map and current location
   Widget _buildRecentSection() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(
-          'https://www.example.com/images/map.jpg', // Replace with actual map image URL
-          fit: BoxFit.cover,
-          height: 150,
-        ),
-      ),
+    return SizedBox(
+      height: 150,
+      child: _currentLocation == null
+          ? const Center(child: CircularProgressIndicator())
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(_currentLocation!.latitude!,
+                    _currentLocation!.longitude!),
+                zoom: 14.0,
+              ),
+              markers: {
+                Marker(
+                  markerId: const MarkerId('currentLocation'),
+                  position: LatLng(_currentLocation!.latitude!,
+                      _currentLocation!.longitude!),
+                  infoWindow: const InfoWindow(title: 'Your Location'),
+                ),
+              },
+              onMapCreated: (controller) => _mapController = controller,
+            ),
     );
   }
 
   // Notification section widget
   Widget _buildNotificationSection() {
-    return Column(
-      children: notifications.map((notification) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 5,
-                    spreadRadius: 1)
-              ],
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.warning_amber_rounded,
-                    color: Colors.yellow, size: 40),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        notification['message']!,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        notification['time']!,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 14),
-                      ),
-                    ],
-                  ),
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('notifications')
+          .orderBy('createdAt', descending: true)
+          .limit(3)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final notifications = snapshot.data!.docs.map((doc) {
+          return NotificationModel.fromMap(
+              doc.data() as Map<String, dynamic>, doc.id);
+        }).toList();
+
+        return Column(
+          children: notifications.map((notification) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade300,
+                        blurRadius: 5,
+                        spreadRadius: 1)
+                  ],
                 ),
-              ],
-            ),
-          ),
+                child: Row(
+                  children: [
+                    notification.companyIconUrl != null
+                      ? Image.network(
+                        notification.companyIconUrl!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        )
+                      : const Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 40),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notification.title,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            notification.description,
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 }

@@ -11,7 +11,6 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
@@ -40,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           username: _usernameController.text.trim(),
           email: _emailController.text.trim(),
           cityCouncil: _selectedCityCouncil,
-          role: 'user',
+          role: 'user', // Assign default role as 'user'
         );
 
         // Save user data to Firestore
@@ -49,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             .doc(newUser.uid)
             .set(newUser.toMap());
 
-        // Navigate back to Login Screen
+        // Navigate back to Login Screen after registration
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -61,7 +60,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       } catch (e) {
         print('Error: $e');
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration Error: $e')),
         );
@@ -77,12 +75,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Using SingleChildScrollView to prevent overflow
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center, // Remove this line to prevent centering
             children: [
               const SizedBox(height: 60),
               const Text(
@@ -164,8 +160,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
-                  // Optional: Implement Google Sign-In on registration if needed
-                  // For now, we'll just show a message
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         content: Text('Google Sign-In not implemented on registration.')),
