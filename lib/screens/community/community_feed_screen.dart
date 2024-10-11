@@ -7,7 +7,7 @@ import '../../widgets/custom_navbar.dart';
 import 'create_post_screen.dart';
 import 'edit_post_screen.dart';
 import 'comments_screen.dart';
-import '../../utils/constants.dart';
+
 
 class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({Key? key}) : super(key: key);
@@ -31,19 +31,30 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instagram Clone'),
-        backgroundColor: Colors.white,
+        title: const Text(
+          'Community',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 1,
         leading: IconButton(
-          icon: const Icon(Icons.camera_alt, color: Colors.black),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.send, color: Colors.black),
-            onPressed: () {},
+            icon: const Icon(Icons.group, color: Colors.black),
+            onPressed: () {
+           
+            },
           ),
-        ],
+          actions: [
+            IconButton(
+            icon: const Icon(Icons.camera_alt, color: Colors.black),
+            onPressed: () {
+              // Navigate to Create Post Screen
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+              );
+            },
+            ),
+          ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').orderBy('createdAt', descending: true).snapshots(),
@@ -63,17 +74,6 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to Create Post Screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreatePostScreen()),
-          );
-        },
-        backgroundColor: AppColors.primaryColor,
-        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: CustomNavBar(
         selectedIndex: _selectedIndex,
@@ -149,15 +149,7 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                     _showComments(post.id, post); // Display comments section
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send, color: Colors.black),
-                  onPressed: () {},
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.bookmark_border, color: Colors.black),
-                  onPressed: () {},
-                ),
+                
               ],
             ),
           ),
