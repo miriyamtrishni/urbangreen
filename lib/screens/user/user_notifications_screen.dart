@@ -130,33 +130,33 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {
+                    onPressed: () {
                     _setFilter('Marked');
-                  },
-                  icon: const Icon(Icons.mark_email_read),
-                  label: const Text('Marked'),
-                  style: ElevatedButton.styleFrom(
+                    },
+                    icon: const Icon(Icons.mark_email_read),
+                    label: const Text('Marked'),
+                    style: ElevatedButton.styleFrom(
                     backgroundColor: _filter == 'Marked'
-                        ? AppColors.primaryColor
-                        : Colors.grey.shade300,
+                      ? AppColors.primaryColor
+                      : Colors.grey.shade300,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    foregroundColor: Colors.black, // Set font color to black
+                    foregroundColor: _filter == 'Marked' ? Colors.white : Colors.green, // Change font color
+                    ),
                   ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
+                  ElevatedButton.icon(
+                    onPressed: () {
                     _setFilter('Unmarked');
-                  },
-                  icon: const Icon(Icons.mark_email_unread),
-                  label: const Text('Unmarked'),
-                  style: ElevatedButton.styleFrom(
+                    },
+                    icon: const Icon(Icons.mark_email_unread),
+                    label: const Text('Unmarked'),
+                    style: ElevatedButton.styleFrom(
                     backgroundColor: _filter == 'Unmarked'
-                        ? AppColors.primaryColor
-                        : Colors.grey.shade300,
+                      ? AppColors.primaryColor
+                      : Colors.grey.shade300,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    foregroundColor: Colors.black, // Set font color to black
+                    foregroundColor: _filter == 'Unmarked' ? Colors.white : Colors.green, // Change font color
+                    ),
                   ),
-                ),
               ],
             ),
           ),
