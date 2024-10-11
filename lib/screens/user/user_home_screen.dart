@@ -1,4 +1,3 @@
-// lib/screens/user/user_home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +6,7 @@ import '../../widgets/custom_navbar.dart';
 import '../../utils/constants.dart';
 import '../../models/post_model.dart';
 import '../../models/notification_model.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
@@ -48,6 +48,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
         title: _buildSearchBar(),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -100,6 +105,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.secondaryColor,
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0), // Adjusted height
           prefixIcon: const Icon(Icons.search, color: Colors.black),
           hintText: 'Search',
           border: OutlineInputBorder(
@@ -114,7 +120,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   // Community section with recent posts
   Widget _buildCommunitySection() {
     return SizedBox(
-      height: 150,
+      height: 200,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('posts')
@@ -146,20 +152,31 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget _buildPostCard(PostModel post) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 200,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            SizedBox(
+              width: 250,
+              height: 140, // Adjusted height for the image to prevent overflow
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(post.imageUrl, fit: BoxFit.cover),
+                child: Image.network(
+                  post.imageUrl,
+                  fit: BoxFit.cover, // Make the image cover the entire card
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              post.caption,
-              style: const TextStyle(fontSize: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                post.caption,
+                style: const TextStyle(fontSize: 14),
+              ),
             ),
           ],
         ),
@@ -170,27 +187,38 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   // Recent section with Google Map and current location
   Widget _buildRecentSection() {
     return SizedBox(
-      height: 150,
+      height: 200,
       child: _currentLocation == null
           ? const Center(child: CircularProgressIndicator())
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(_currentLocation!.latitude!,
-                    _currentLocation!.longitude!),
-                zoom: 14.0,
+          : Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              markers: {
-                Marker(
-                  markerId: const MarkerId('currentLocation'),
-                  position: LatLng(_currentLocation!.latitude!,
-                      _currentLocation!.longitude!),
-                  infoWindow: const InfoWindow(title: 'Your Location'),
+              elevation: 5,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(_currentLocation!.latitude!,
+                        _currentLocation!.longitude!),
+                    zoom: 14.0,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('currentLocation'),
+                      position: LatLng(_currentLocation!.latitude!,
+                          _currentLocation!.longitude!),
+                      infoWindow: const InfoWindow(title: 'Your Location'),
+                    ),
+                  },
+                  onMapCreated: (controller) => _mapController = controller,
                 ),
-              },
-              onMapCreated: (controller) => _mapController = controller,
+              ),
             ),
     );
   }
+
+
 
   // Notification section widget
   Widget _buildNotificationSection() {
@@ -214,47 +242,48 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           children: notifications.map((notification) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
+              child: Card(
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 5,
-                        spreadRadius: 1)
-                  ],
                 ),
-                child: Row(
-                  children: [
-                    notification.companyIconUrl != null
-                      ? Image.network(
-                        notification.companyIconUrl!,
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
-                        )
-                      : const Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 40),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            notification.title,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            notification.description,
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 14),
-                          ),
-                        ],
+                elevation: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      notification.companyIconUrl != null
+                        ? ClipOval(
+                            child: Image.network(
+                              notification.companyIconUrl!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : const Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 40),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              notification.title,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              timeago.format(notification.createdAt.toDate()),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

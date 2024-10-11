@@ -49,6 +49,7 @@ dependencies:
   location: ^6.0.2
   geolocator: ^13.0.1
   google_fonts: ^6.2.1
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_test:

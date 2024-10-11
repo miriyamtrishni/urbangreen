@@ -1,4 +1,3 @@
-// lib/screens/authentication/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
@@ -22,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final AuthenticationService _authService = AuthenticationService();
   bool _isRememberMeChecked = false;
+  bool _isPasswordVisible = false; // Variable to toggle password visibility
 
   @override
   void initState() {
@@ -114,90 +114,120 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 60),
-              const Text(
-                'Welcome back,',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const Text('Login to your account'),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Enter email or username',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.visibility_off),
-                ),
-                obscureText: true,
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isRememberMeChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _isRememberMeChecked = value ?? false;
-                      });
-                    },
+      body: Center( // Wrap with a Center widget
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center Column contents vertically
+              children: [
+                const SizedBox(height: 60),
+                Align(
+                  alignment: Alignment.centerLeft, 
+                  child: const Text(
+                    'Welcome back,',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  const Text('Remember me'),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Forgot Password?'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: AppColors.primaryColor,
                 ),
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton.icon(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.grey.shade300,
+                Align(
+                  alignment: Alignment.centerLeft, 
+                  child: const Text('Login to your account'),
                 ),
-                icon: Image.asset('assets/google_icon.png', height: 24),
-                label: const Text('Login with Google'),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don’t have an Account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RegisterScreen()),
-                      );
-                    },
-                    child: const Text('Create Account'),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter email or username',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primaryColor, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primaryColor, width: 2.0),
+                    ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: !_isPasswordVisible, // Toggle visibility
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primaryColor, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primaryColor, width: 2.0),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: AppColors.primaryColor, // Apply primary color when visible
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isRememberMeChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isRememberMeChecked = value ?? false;
+                        });
+                      },
+                    ),
+                    const Text('Remember me'),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('Forgot Password?'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: AppColors.primaryColor,
+                    foregroundColor: Colors.white
+                  ),
+                  child: const Text('Login'),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: Colors.grey.shade300,
+                  ),
+                  icon: Image.asset('assets/google_icon.png', height: 24),
+                  label: const Text('Login with Google'),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don’t have an Account?"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreen()),
+                        );
+                      },
+                      child: const Text('Create Account'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

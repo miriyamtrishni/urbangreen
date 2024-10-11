@@ -1,4 +1,3 @@
-// lib/screens/community/community_feed_screen.dart
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,8 +31,19 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Community Feed'),
-        backgroundColor: AppColors.primaryColor,
+        title: const Text('Instagram Clone'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(Icons.camera_alt, color: Colors.black),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.send, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').orderBy('createdAt', descending: true).snapshots(),
@@ -77,7 +87,8 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
     bool isLiked = post.likes.contains(currentUserId); // Check if the current user has liked the post
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      elevation: 0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -85,8 +96,7 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             leading: CircleAvatar(
               backgroundImage: NetworkImage(post.imageUrl),
             ),
-            title: Text(post.username),
-            subtitle: Text(post.location),
+            title: Text(post.username, style: const TextStyle(fontWeight: FontWeight.bold)),
             trailing: isPostOwner
                 ? PopupMenuButton<String>(
                     onSelected: (value) {
@@ -118,35 +128,70 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
           if (post.imageUrl.isNotEmpty)
             Image.network(
               post.imageUrl,
-              height: 200,
+              height: 400,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(post.caption),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: isLiked ? Colors.red : Colors.grey,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.black,
+                  ),
+                  onPressed: () => _toggleLike(post.id, post.likes),
                 ),
-                onPressed: () => _toggleLike(post.id, post.likes),
-              ),
-              Text('${post.likes.length} likes'), // Display the number of likes
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.comment),
-                onPressed: () {
-                  _showComments(post.id, post); // Display comments section
-                },
-              ),
-              const Text('Comments'),
-            ],
+                IconButton(
+                  icon: const Icon(Icons.comment, color: Colors.black),
+                  onPressed: () {
+                    _showComments(post.id, post); // Display comments section
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send, color: Colors.black),
+                  onPressed: () {},
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.bookmark_border, color: Colors.black),
+                  onPressed: () {},
+                ),
+              ],
+            ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text('${post.likes.length} likes', style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: post.username,
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                  TextSpan(
+                    text: ' ${post.caption}',
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: GestureDetector(
+              onTap: () {
+                _showComments(post.id, post); // Display comments section
+              },
+              child: const Text('View all comments', style: TextStyle(color: Colors.grey)),
+            ),
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
