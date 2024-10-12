@@ -235,15 +235,19 @@ class _AddBusRouteScreenState extends State<AddBusRouteScreen> {
                             child: const Text('Cancel'),
                           ),
                           const SizedBox(width: 10),
-                          ElevatedButton(
+                            ElevatedButton(
                             onPressed: () {
                               _addOrUpdateRoute(routeId: routeId);
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white, // Set foreground color to white
+                            ),
                             child: Text(routeId != null
-                                ? 'Update Route'
-                                : 'Add Route'),
-                          ),
+                              ? 'Update Route'
+                              : 'Add Route'),
+                            ),
                         ],
                       ),
                     ],
@@ -271,8 +275,9 @@ class _AddBusRouteScreenState extends State<AddBusRouteScreen> {
         title: const Text('Add Bus Route'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddRoutePopup(),
+        icon: const Icon(Icons.add),
+        onPressed: () => _showAddRoutePopup(),
+        color: Colors.white, // Set foreground color to white
           ),
         ],
       ),

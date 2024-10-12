@@ -114,6 +114,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
             ? 'Edit Notification'
             : 'Add Notification'),
         backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -135,18 +136,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           labelText: "Notification Title",
-                          labelStyle: const TextStyle(color: Colors.black),
-                          fillColor: Color(0xFF00BF63), // Light color background
+                          labelStyle: const TextStyle(color: Color(0xFF00BF63)),
+                          fillColor: Color(0xFFFFFFFF), // Light color background
                           filled: true, // Ensure background is filled
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black), 
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)), 
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black), 
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)), 
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
@@ -157,18 +158,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           labelText: "Description",
-                          labelStyle: const TextStyle(color: Colors.black),
-                          fillColor: Color(0xFF00BF63),
+                          labelStyle: const TextStyle(color: Color(0xFF00BF63)),
+                          fillColor: Color(0xFFFFFFFF),
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
@@ -192,18 +193,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         },
                         decoration: InputDecoration(
                           labelText: "Category",
-                          labelStyle: const TextStyle(color: Colors.black),
-                          fillColor: Color(0xFF00BF63),
+                          labelStyle: const TextStyle(color: Color(0xFF00BF63)),
+                          fillColor: Color(0xFFFFFFFF),
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Color(0xFF00BF63)),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),

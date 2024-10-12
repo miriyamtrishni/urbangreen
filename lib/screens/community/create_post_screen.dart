@@ -19,21 +19,45 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _locationController = TextEditingController();
   String? _category;
   File? _imageFile;
+  bool _isPosting = false; // State to manage posting status
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Image Source'),
+        actions: [
+          TextButton(
+            child: const Text('Camera'),
+            onPressed: () => Navigator.of(context).pop(ImageSource.camera),
+          ),
+          TextButton(
+            child: const Text('Gallery'),
+            onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
+          ),
+        ],
+      ),
+    );
+
+    if (source != null) {
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
     }
   }
 
   Future<void> _createPost() async {
-    if (_imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add a photo')));
+    if (_captionController.text.isEmpty || _locationController.text.isEmpty || _category == null || _imageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please complete all fields and add a photo')));
       return;
     }
+
+    setState(() {
+      _isPosting = true; // Disable the button while posting
+    });
 
     try {
       // Upload image to Firebase Storage
@@ -54,16 +78,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       });
 
       // Show success message and navigate back
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post created successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post created successfully')));
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error creating post: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error creating post: $e')));
+    } finally {
+      setState(() {
+        _isPosting = false; // Re-enable the button after posting
+      });
     }
   }
 
   Future<String> _uploadImage(File image) async {
     String fileName = 'posts/${DateTime.now().millisecondsSinceEpoch}.jpg';
-    UploadTask uploadTask = FirebaseStorage.instance.ref(fileName).putFile(image);
+    UploadTask uploadTask =
+        FirebaseStorage.instance.ref(fileName).putFile(image);
     TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
   }
@@ -74,6 +105,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       appBar: AppBar(
         title: const Text('Create Post'),
         backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -81,7 +113,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_imageFile != null)
-              Image.file(_imageFile!, height: 250, width: double.infinity, fit: BoxFit.cover),
+              Image.file(_imageFile!,
+                  height: 250, width: double.infinity, fit: BoxFit.cover),
             const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: _pickImage,
@@ -90,23 +123,40 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 backgroundColor: AppColors.primaryColor,
+                foregroundColor: Colors.white,
               ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _captionController,
-              decoration: const InputDecoration(
-                labelText: 'Caption',
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(
+                  labelText: 'Caption',
+                  errorText: _captionController.text.isEmpty && _isPosting ? 'Caption cannot be empty' : null,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 1.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 2.0),
+                  ),
+                  ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Location',
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(
+                  labelText: 'Location',
+                  errorText: _locationController.text.isEmpty && _isPosting ? 'Location cannot be empty' : null,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 1.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 2.0),
+                  ),
+                  ),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
@@ -122,17 +172,29 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   _category = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Category',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: AppColors.primaryColor, width: 1.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: AppColors.primaryColor, width: 2.0),
+                ),
               ),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _createPost,
+              onPressed: _isPosting ? null : _createPost,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 backgroundColor: AppColors.primaryColor,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.grey,
               ),
               child: const Text('Post'),
             ),

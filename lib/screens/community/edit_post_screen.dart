@@ -34,12 +34,31 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(() {
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Image Source'),
+        actions: [
+          TextButton(
+            child: const Text('Camera'),
+            onPressed: () => Navigator.of(context).pop(ImageSource.camera),
+          ),
+          TextButton(
+            child: const Text('Gallery'),
+            onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
+          ),
+        ],
+      ),
+    );
+
+    if (source != null) {
+      final pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
       }
-    });
+    }
   }
 
   Future<void> _updatePost() async {
@@ -73,6 +92,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
       appBar: AppBar(
         title: const Text('Edit Post'),
         backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
         actions: [
           TextButton(
             onPressed: _updatePost,
@@ -100,6 +120,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 backgroundColor: AppColors.primaryColor,
+                foregroundColor: Colors.white,
               ),
             ),
             const SizedBox(height: 10),
@@ -107,7 +128,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
               controller: _captionController,
               decoration: const InputDecoration(
                 labelText: 'Edit Caption',
-                border: OutlineInputBorder(),
+                 enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 1.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 2.0),
+                  ),
               ),
             ),
             const SizedBox(height: 10),
@@ -115,7 +143,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
               controller: _locationController,
               decoration: const InputDecoration(
                 labelText: 'Edit Location',
-                border: OutlineInputBorder(),
+                 enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 1.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.primaryColor, width: 2.0),
+                  ),
               ),
             ),
             const SizedBox(height: 10),
@@ -132,9 +167,19 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   _category = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Edit Category',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: AppColors.primaryColor, width: 1.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: AppColors.primaryColor, width: 2.0),
+                ),
               ),
             ),
           ],

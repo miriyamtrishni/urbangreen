@@ -9,6 +9,8 @@ import 'screens/authentication/login_screen.dart';
 import 'screens/community/create_post_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
 import 'screens/admin/add_notification_screen.dart';
+import 'screens/splash_screen.dart'; // Import the splash screen
+import 'screens/initial_screen.dart'; // Import the initial screen for role check
 
 Map<String, WidgetBuilder> routes = {
   '/home': (context) => const UserHomeScreen(),
@@ -20,5 +22,6 @@ Map<String, WidgetBuilder> routes = {
   '/add_post': (context) => const CreatePostScreen(),
   '/admin_home': (context) => const AdminHomeScreen(),
   '/add_notification': (context) => const AddNotificationScreen(),
-  // Add other routes as needed
+  '/splash': (context) => const SplashScreen(),  // Add the splash screen route
+  '/initial': (context) => InitialScreen(), // Add the initial screen route
 };

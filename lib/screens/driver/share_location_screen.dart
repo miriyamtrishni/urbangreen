@@ -39,6 +39,7 @@ class _ShareLocationScreenState extends State<ShareLocationScreen> {
       appBar: AppBar(
         title: const Text('Share Location'),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: GoogleMap(
         initialCameraPosition: const CameraPosition(
