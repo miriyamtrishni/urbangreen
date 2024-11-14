@@ -1,111 +1,124 @@
-# UrbanGreen
 
-![UrbanGreen Logo](<IMAGE_URL>)  
+# 🌳 UrbanGreen
 
-UrbanGreen is a mobile application designed to promote sustainable urban living. Developed with **Flutter** and **Firebase**, the app integrates key urban services into a user-friendly platform, focusing on Sustainable Development Goal (SDG) 11: Sustainable Cities and Communities.
+![UrbanGreen Logo](https://github.com/dilrukshax/urbangreen/assets/logo.png)
+
+UrbanGreen is a smart city mobile application designed to enhance urban sustainability, efficiency, and community engagement. Built with **Flutter** and **Firebase**, UrbanGreen integrates essential urban services, aiming to support Sustainable Development Goal (SDG) 11: Sustainable Cities and Communities.
 
 ---
 
-## Table of Contents
+## 🌐 Table of Contents
+- [Project Overview](#project-overview)
 - [Features](#features)
-- [Technologies](#technologies)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Getting Started](#getting-started)
+- [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ---
 
-## Features
+## 📘 Project Overview
 
-- **Real-Time Public Transport Tracking**: View live locations, estimated arrival times, and route details for buses and trains.
-- **Community Engagement**: Report urban issues, share ideas, organize local events, and collaborate on community projects.
-- **Notifications and Alerts**: Receive timely alerts for waste collection, utility interruptions, public events, and emergency situations.
-- **Emergency Contact Access**: Quickly access emergency services through a dedicated button.
-- **Location Management**: Change location to access transport and service information for various areas.
+UrbanGreen addresses critical urban issues like traffic congestion, environmental sustainability, and limited civic participation. By providing real-time public transport tracking, robust community features, and timely notifications, UrbanGreen improves urban living and strengthens community bonds.
+
+> **Goal**: To create a connected, sustainable, and engaged urban community by leveraging technology.
 
 ---
 
-## Technologies
+## ✨ Features
 
-- ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
-- ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+### 1. 🚍 Real-Time Public Transport Tracking
+   - View live locations of buses and trains.
+   - Get estimated arrival times, delay notifications, and route details.
 
-This project leverages **Flutter** for cross-platform mobile development and **Firebase** as a backend solution for real-time database and authentication services.
+### 2. 📢 Notifications and Alerts
+   - Receive updates on waste collection, utility interruptions, public events, and emergencies, keeping you informed at all times.
+
+### 3. 🌆 Community Engagement
+   - Report urban issues (e.g., potholes, broken lights) with photos.
+   - Participate in community events and forums to share ideas and collaborate on local projects.
+
+### 4. 🚨 Emergency Contact Access
+   - Instant access to emergency services with a prominent red bell icon for quick response.
+
+### 5. 📍 Location Management
+   - Change location to view relevant transportation and event details for other areas.
 
 ---
 
-## Installation
+## 📸 Screenshots
 
-To get a local copy up and running:
+![Home Screen](https://github.com/dilrukshax/urbangreen/assets/home-screen.png)
+![Transport Tracking](https://github.com/dilrukshax/urbangreen/assets/transport-tracking.png)
+![Community Reporting](https://github.com/dilrukshax/urbangreen/assets/community-reporting.png)
 
-1. Clone the repository:
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Flutter SDK**: Make sure you have Flutter installed.
+- **Firebase**: Set up Firebase for authentication, database, and real-time data updates.
+
+### Installation
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/dilrukshax/urbangreen.git
    ```
-2. Navigate to the project directory:
+
+2. **Navigate to the Project Directory**:
    ```bash
    cd urbangreen
    ```
-3. Install dependencies:
+
+3. **Install Dependencies**:
    ```bash
    flutter pub get
    ```
-4. Run the app:
+
+4. **Set Up Firebase**: Follow the [Firebase integration guide](https://firebase.google.com/docs/flutter/setup) to connect Firebase with your app.
+
+5. **Run the App**:
    ```bash
    flutter run
    ```
 
 ---
 
-## Usage
+## 🛠 Technologies Used
 
-- **Track Public Transport**: Monitor live public transport details on the map.
-- **Engage with the Community**: Report issues or view community projects and local events.
-- **Stay Informed**: Receive alerts for urban services and emergencies relevant to your location.
-- **Emergency Access**: Quickly call emergency services directly from the app.
-
----
-
-## Contributing
-
-Contributions are welcome! Follow these steps to contribute:
-
-1. Fork the repository.
-2. Create your feature branch:
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. Open a pull request.
-
-Please submit a pull request or open an issue for suggestions.
+- ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+- ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)
+- ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 
 ---
 
-## License
+## 🤝 Contributing
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+We welcome contributions from the community! To contribute:
 
----
-
-## Contact
-
-- **Authors**: 
-  - [Trishni W. R. M.](mailto:it22076366@my.sliit.lk)  
-  - [Dilruksha A.G.C.D.](mailto:it22561770@my.sliit.lk)  
-  - [Hesara P.K.A.N.](mailto:it22561398@my.sliit.lk)  
-- **Institution**: Sri Lanka Institute of Information Technology (SLIIT)
-- **GitHub Repository**: [UrbanGreen](https://github.com/dilrukshax/urbangreen)
+1. **Fork the Project**.
+2. **Create a Branch** (`git checkout -b feature-branch`).
+3. **Commit Your Changes** (`git commit -m 'Add new feature'`).
+4. **Push to the Branch** (`git push origin feature-branch`).
+5. **Open a Pull Request**.
 
 ---
 
-UrbanGreen is built to enhance urban living through sustainable, user-centered technology solutions. Join us in creating greener, more connected cities!
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+### 📫 Contact
+
+For any questions or suggestions, please contact:
+- **Dilruksha A.G.C.D** - [dilruksha@example.com](mailto:dilruksha@example.com)
+
+---
+
+**UrbanGreen**: Paving the way for a greener, smarter, and more connected city.
+
+```
