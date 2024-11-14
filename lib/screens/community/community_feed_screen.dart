@@ -8,7 +8,6 @@ import 'create_post_screen.dart';
 import 'edit_post_screen.dart';
 import 'comments_screen.dart';
 
-
 class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({Key? key}) : super(key: key);
 
@@ -38,23 +37,21 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 1,
         leading: IconButton(
-            icon: const Icon(Icons.group, color: Colors.black),
-            onPressed: () {
-           
-            },
-          ),
-          actions: [
-            IconButton(
+          icon: const Icon(Icons.group, color: Colors.black),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
             icon: const Icon(Icons.camera_alt, color: Colors.black),
             onPressed: () {
               // Navigate to Create Post Screen
               Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+                context,
+                MaterialPageRoute(builder: (context) => const CreatePostScreen()),
               );
             },
-            ),
-          ],
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').orderBy('createdAt', descending: true).snapshots(),
@@ -96,7 +93,13 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             leading: CircleAvatar(
               backgroundImage: NetworkImage(post.imageUrl),
             ),
-            title: Text(post.username, style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(post.username, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('Location: ${post.location}', style: const TextStyle(color: Colors.black)),
+              ],
+            ),
             trailing: isPostOwner
                 ? PopupMenuButton<String>(
                     onSelected: (value) {
@@ -149,7 +152,6 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                     _showComments(post.id, post); // Display comments section
                   },
                 ),
-                
               ],
             ),
           ),
