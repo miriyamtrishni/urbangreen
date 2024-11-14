@@ -1,4 +1,3 @@
-
 # 🌳 UrbanGreen
 
 ![UrbanGreen Logo](https://github.com/dilrukshax/urbangreen/assets/logo.png)
@@ -11,8 +10,10 @@ UrbanGreen is a smart city mobile application designed to enhance urban sustaina
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Screenshots](#screenshots)
+- [Case Study](#case-study)
 - [Getting Started](#getting-started)
 - [Technologies Used](#technologies-used)
+- [Contributors](#contributors)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -55,6 +56,12 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
 
 ---
 
+## 📄 Case Study
+
+For an in-depth look at the design and development process of UrbanGreen, check out our [Case Study on Behance](https://www.behance.net/your-behance-link).
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -94,6 +101,14 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
 
 ---
 
+## 👥 Contributors
+
+- [Trishni W. R. M.](https://github.com/trishniwrm)
+- [Dilruksha A. G. C. D.](https://github.com/dilrukshax)
+- [Hesara P. K. A. N.](https://github.com/hesarapkan)
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions from the community! To contribute:
@@ -120,5 +135,3 @@ For any questions or suggestions, please contact:
 ---
 
 **UrbanGreen**: Paving the way for a greener, smarter, and more connected city.
-
-```
