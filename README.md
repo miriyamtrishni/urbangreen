@@ -109,4 +109,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 UrbanGreen is built to enhance urban living through sustainable, user-centered technology solutions. Join us in creating greener, more connected cities!
-```
