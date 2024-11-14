@@ -1,6 +1,6 @@
 # 🌳 UrbanGreen
 
-![UrbanGreen Logo](https://github.com/dilrukshax/urbangreen/assets/logo.png)
+![UrbanGreen Logo](https://github.com/dilrukshax/urbangreen/blob/main/assets/logo.png)
 
 UrbanGreen is a smart city mobile application designed to enhance urban sustainability, efficiency, and community engagement. Built with **Flutter** and **Firebase**, UrbanGreen integrates essential urban services, aiming to support Sustainable Development Goal (SDG) 11: Sustainable Cities and Communities.
 
