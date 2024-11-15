@@ -58,18 +58,18 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
 
 # User Side
 
-<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;">
-  <img src="https://github.com/user-attachments/assets/a2081067-d2a9-403a-8d20-4f9178d32149" alt="Screenshot 1" width="250"/>
-  <img src="https://github.com/user-attachments/assets/8bf4d55b-a881-4930-98e4-adfdbbbf817c" alt="Screenshot 2" width="250"/>
-  <img src="https://github.com/user-attachments/assets/6bf41de8-4135-41b7-b2d7-e41f59d1c63c" alt="Screenshot 3" width="250"/>
-  <img src="https://github.com/user-attachments/assets/1201a0ae-6c11-4487-a66b-78c23973c715" alt="Screenshot 4" width="250"/>
-  <img src="https://github.com/user-attachments/assets/f0155fb1-924f-46dd-9f20-61b84eb01a5a" alt="Screenshot 5" width="250"/>
-  <img src="https://github.com/user-attachments/assets/6d043ff0-3719-4cc9-8b3a-d6f000acdb21" alt="Screenshot 6" width="250"/>
-  <img src="https://github.com/user-attachments/assets/8dff96a4-fadc-4ae5-a83e-fadd4812b2ae" alt="Screenshot 7" width="250"/>
-  <img src="https://github.com/user-attachments/assets/f87750ef-8de7-4a1d-8835-6676a6e26712" alt="Screenshot 8" width="250"/>
-  <img src="https://github.com/user-attachments/assets/bc0e216f-a460-42f4-b52e-1ffeea9b7dbd" alt="Screenshot 9" width="250"/>
-  <img src="https://github.com/user-attachments/assets/213828fc-22aa-4fc7-bb55-6f364ee07ea7" alt="Screenshot 10" width="250"/>
+<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+  <img src="https://github.com/user-attachments/assets/a2081067-d2a9-403a-8d20-4f9178d32149" alt="Screenshot 1" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/8bf4d55b-a881-4930-98e4-adfdbbbf817c" alt="Screenshot 2" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/6bf41de8-4135-41b7-b2d7-e41f59d1c63c" alt="Screenshot 3" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/1201a0ae-6c11-4487-a66b-78c23973c715" alt="Screenshot 4" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/f0155fb1-924f-46dd-9f20-61b84eb01a5a" alt="Screenshot 5" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/6d043ff0-3719-4cc9-8b3a-d6f000acdb21" alt="Screenshot 6" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/8dff96a4-fadc-4ae5-a83e-fadd4812b2ae" alt="Screenshot 7" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/f87750ef-8de7-4a1d-8835-6676a6e26712" alt="Screenshot 8" width="250" style="border: 2px solid black;"/>
+  <img src="https://github.com/user-attachments/assets/bc0e216f-a460-42f4-b52e-1ffeea9b7dbd" alt="Screenshot 9" width="250" style="border: 2px solid black;"/>
 </div>
+
 
 
 # Admin Side
