@@ -21,7 +21,7 @@ UrbanGreen is a smart city mobile application designed to enhance urban sustaina
 - [Technologies Used](#technologies-used)
 - [Contributors](#contributors)
 - [Contributing](#contributing)
-- [License](#license)
+
 
 ---
 
@@ -56,9 +56,28 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
 
 ## 📸 Screenshots
 
-![Home Screen](https://github.com/dilrukshax/urbangreen/assets/home-screen.png)
-![Transport Tracking](https://github.com/dilrukshax/urbangreen/assets/transport-tracking.png)
-![Community Reporting](https://github.com/dilrukshax/urbangreen/assets/community-reporting.png)
+# User Side
+![Screenshot_20241115-072833](https://github.com/user-attachments/assets/a2081067-d2a9-403a-8d20-4f9178d32149)
+![Screenshot_20241115-073601](https://github.com/user-attachments/assets/8bf4d55b-a881-4930-98e4-adfdbbbf817c)
+![Screenshot_20241115-072755](https://github.com/user-attachments/assets/6bf41de8-4135-41b7-b2d7-e41f59d1c63c)
+![Screenshot_20241115-072921](https://github.com/user-attachments/assets/1201a0ae-6c11-4487-a66b-78c23973c715)
+![Screenshot_20241115-073027](https://github.com/user-attachments/assets/f0155fb1-924f-46dd-9f20-61b84eb01a5a)
+![Screenshot_20241115-073014](https://github.com/user-attachments/assets/6d043ff0-3719-4cc9-8b3a-d6f000acdb21)
+![Screenshot_20241115-073004](https://github.com/user-attachments/assets/8dff96a4-fadc-4ae5-a83e-fadd4812b2ae)
+![Screenshot_20241115-072948](https://github.com/user-attachments/assets/f87750ef-8de7-4a1d-8835-6676a6e26712)
+![Screenshot_20241115-072957](https://github.com/user-attachments/assets/bc0e216f-a460-42f4-b52e-1ffeea9b7dbd)
+![Screenshot_20241115-073014](https://github.com/user-attachments/assets/213828fc-22aa-4fc7-bb55-6f364ee07ea7)
+
+# Admin Side
+![Screenshot_20241115-073408](https://github.com/user-attachments/assets/61dffa44-70d6-4cf0-8824-4f638f45043b)
+![Screenshot_20241115-073416](https://github.com/user-attachments/assets/3b7f4919-df41-41d2-ac91-c7201e0473ee)
+
+# Driver Side
+![Screenshot_20241115-073539](https://github.com/user-attachments/assets/e68e68fe-f700-4417-8860-8160a0e06725)
+
+
+
+
 
 ---
 
@@ -109,9 +128,11 @@ For an in-depth look at the design and development process of UrbanGreen, check 
 
 ## 👥 Contributors
 
-- [Trishni W. R. M.](https://github.com/trishniwrm)
-- [Dilruksha A. G. C. D.](https://github.com/dilrukshax)
-- [Hesara P. K. A. N.](https://github.com/hesarapkan)
+We’d like to thank all contributors to this project:
+
+- **Trishni W. R. M.** - [GitHub Profile](https://github.com/miriyamtrishni)
+- **Dilruksha A.G.C.D.** - [GitHub Profile](https://github.com/dilrukshax)
+- **Hesara P.K.A.N.** - [GitHub Profile](https://github.com/nidulaX)
 
 ---
 
@@ -124,19 +145,6 @@ We welcome contributions from the community! To contribute:
 3. **Commit Your Changes** (`git commit -m 'Add new feature'`).
 4. **Push to the Branch** (`git push origin feature-branch`).
 5. **Open a Pull Request**.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-### 📫 Contact
-
-For any questions or suggestions, please contact:
-- **Dilruksha A.G.C.D** - [dilruksha@example.com](mailto:dilruksha@example.com)
 
 ---
 
