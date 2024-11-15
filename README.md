@@ -1,12 +1,8 @@
 # 🌳 UrbanGreen
 
-
-
 <div align="center">
   <img src="https://github.com/dilrukshax/urbangreen/blob/main/assets/logo.png" alt="UrbanGreen Logo" width="200">
 </div>
-
-
 
 UrbanGreen is a smart city mobile application designed to enhance urban sustainability, efficiency, and community engagement. Built with **Flutter** and **Firebase**, UrbanGreen integrates essential urban services, aiming to support Sustainable Development Goal (SDG) 11: Sustainable Cities and Communities.
 
@@ -21,7 +17,6 @@ UrbanGreen is a smart city mobile application designed to enhance urban sustaina
 - [Technologies Used](#technologies-used)
 - [Contributors](#contributors)
 - [Contributing](#contributing)
-
 
 ---
 
@@ -70,18 +65,20 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
   <img src="https://github.com/user-attachments/assets/bc0e216f-a460-42f4-b52e-1ffeea9b7dbd" alt="Screenshot 9" width="250"/>
 </div>
 
+---
 
-# Admin Side
+### Admin Side
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+<div align="center">
   <img src="https://github.com/user-attachments/assets/61dffa44-70d6-4cf0-8824-4f638f45043b" alt="Admin Screenshot 1" width="250"/>
   <img src="https://github.com/user-attachments/assets/3b7f4919-df41-41d2-ac91-c7201e0473ee" alt="Admin Screenshot 2" width="250"/>
 </div>
 
+---
 
-# Driver Side
+### Driver Side
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+<div align="center">
   <img src="https://github.com/user-attachments/assets/e68e68fe-f700-4417-8860-8160a0e06725" alt="Driver Screenshot" width="250"/>
 </div>
 
