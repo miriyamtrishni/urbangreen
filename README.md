@@ -71,11 +71,13 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
 </div>
 
 
-
-
 # Admin Side
-![Screenshot_20241115-073408](https://github.com/user-attachments/assets/61dffa44-70d6-4cf0-8824-4f638f45043b)
-![Screenshot_20241115-073416](https://github.com/user-attachments/assets/3b7f4919-df41-41d2-ac91-c7201e0473ee)
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+  <img src="https://github.com/user-attachments/assets/61dffa44-70d6-4cf0-8824-4f638f45043b" alt="Admin Screenshot 1" width="250"/>
+  <img src="https://github.com/user-attachments/assets/3b7f4919-df41-41d2-ac91-c7201e0473ee" alt="Admin Screenshot 2" width="250"/>
+</div>
+
 
 # Driver Side
 ![Screenshot_20241115-073539](https://github.com/user-attachments/assets/e68e68fe-f700-4417-8860-8160a0e06725)
