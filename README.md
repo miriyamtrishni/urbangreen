@@ -63,6 +63,8 @@ UrbanGreen addresses critical urban issues like traffic congestion, environmenta
   <img src="https://github.com/user-attachments/assets/8bf4d55b-a881-4930-98e4-adfdbbbf817c" alt="Screenshot 2" width="250"/>
   <img src="https://github.com/user-attachments/assets/6bf41de8-4135-41b7-b2d7-e41f59d1c63c" alt="Screenshot 3" width="250"/>
   <img src="https://github.com/user-attachments/assets/1201a0ae-6c11-4487-a66b-78c23973c715" alt="Screenshot 4" width="250"/>
+  <img src="https://github.com/user-attachments/assets/f0155fb1-924f-46dd-9f20-61b84eb01a5a" alt="Screenshot 5" width="250"/>
+  <img src="https://github.com/user-attachments/assets/6d043ff0-3719-4cc9-8b3a-d6f000acdb21" alt="Screenshot 6" width="250"/>
 </div>
 
 ---
